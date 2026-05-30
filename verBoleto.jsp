@@ -76,7 +76,7 @@
     <link href="proyecto2/css/bootstrap.min.css" rel="stylesheet">
     <link href="proyecto2/css/estilos-eventos.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
 <body style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 2rem 0;">
     <div class="container">
@@ -128,7 +128,7 @@
                                 </div>
                             </div>
                             <div class="col-md-4 text-center">
-                                <div class="qr-code" id="qrCode"></div>
+                                <div id="qrCode" class="bg-light border rounded shadow-sm d-inline-block" style="padding: 10px;"></div>
                                 <p class="small text-muted mt-2">Código: <strong><%= codigoBoleto %></strong></p>
                             </div>
                         </div>
@@ -155,20 +155,33 @@
 
     <script src="proyecto2/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Generar QR Code
-        QRCode.toCanvas(document.getElementById('qrCode'), '<%= codigoBoleto %>', {
-            width: 150,
-            margin: 2,
-            color: {
-                dark: '#000000',
-                light: '#FFFFFF'
+        window.onload = function() {
+            const qrElement = document.getElementById('qrCode');
+            const text = '<%= codigoBoleto %>';
+            
+            // Intentar usar la librería QRCode (qrcode.js)
+            if (typeof QRCode !== 'undefined') {
+                try {
+                    new QRCode(qrElement, {
+                        text: text,
+                        width: 140,
+                        height: 140,
+                        colorDark: "#000000",
+                        colorLight: "#ffffff",
+                        correctLevel: QRCode.CorrectLevel.H
+                    });
+                    console.log('QR generado con QRCode.js');
+                    return;
+                } catch (e) {
+                    console.error('Error con QRCode.js:', e);
+                }
             }
-        }, function (error) {
-            if (error) {
-                console.error(error);
-                document.getElementById('qrCode').innerHTML = '<div class="text-center p-3"><i class="fas fa-qrcode fa-3x text-muted"></i><br><small>QR Code</small></div>';
-            }
-        });
+
+            // Si falla o no está, usar Google Charts API (respaldo sin dependencias)
+            console.log('Usando respaldo de Google Charts API');
+            const qrUrl = "https://chart.googleapis.com/chart?chs=150x150&cht=qr&chl=" + encodeURIComponent(text) + "&choe=UTF-8";
+            qrElement.innerHTML = '<img src="' + qrUrl + '" alt="QR Code" style="width: 140px; height: 140px;">';
+        };
     </script>
     
     <style>

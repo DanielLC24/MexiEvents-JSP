@@ -116,7 +116,6 @@
         
         // Redirigir a ver el boleto
         response.sendRedirect("verBoleto.jsp?codigo=" + codigoBoleto);
-        return;
         
     } catch (Exception e) {
         if (conn != null) {
@@ -125,7 +124,6 @@
             } catch (SQLException ex) {}
         }
         response.sendRedirect("detalleEvento.jsp?id=" + eventoIdInt + "&error=Error al procesar la compra: " + e.getMessage());
-        return;
     } finally {
         try {
             if (rs != null) rs.close();
