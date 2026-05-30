@@ -1,0 +1,19 @@
+# Carpetas de servidor y temporales
+WEB-INF/classes/
+WEB-INF/deploy/
+target/
+build/
+bin/
+
+# XAMPP / Tomcat específicos
+.settings/
+.project
+.classpath
+
+# Archivos de sistema
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# Logs
+*.log
